@@ -19,7 +19,7 @@ export const fallbackProjects: Project[] = [
     topics: ["react", "typescript", "firebase", "nestjs"],
     stars: 0,
     repositoryUrl: "https://github.com/kevinmistrele/finora-financeiro",
-    homepageUrl: null,
+    homepageUrl: "https://finora-financeiro.web.app/",
     updatedAt: new Date().toISOString(),
     featured: true,
   },
