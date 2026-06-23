@@ -15,14 +15,16 @@ import * as THREE from "three";
 function createParticlePositions(count: number): Float32Array {
   const positions = new Float32Array(count * 3);
 
-  for (let index = 0; index < count; index += 1) {
-    const radius = 5 + Math.random() * 5;
-    const theta = Math.random() * Math.PI * 2;
-    const phi = Math.acos(2 * Math.random() - 1);
+  // Spread particles across a wide box so the starfield fills the full
+  // viewport width instead of clustering in a central sphere.
+  const spreadX = 36;
+  const spreadY = 20;
+  const spreadZ = 16;
 
-    positions[index * 3] = radius * Math.sin(phi) * Math.cos(theta);
-    positions[index * 3 + 1] = radius * Math.sin(phi) * Math.sin(theta);
-    positions[index * 3 + 2] = radius * Math.cos(phi);
+  for (let index = 0; index < count; index += 1) {
+    positions[index * 3] = (Math.random() - 0.5) * spreadX;
+    positions[index * 3 + 1] = (Math.random() - 0.5) * spreadY;
+    positions[index * 3 + 2] = (Math.random() - 0.5) * spreadZ;
   }
 
   return positions;
@@ -30,7 +32,7 @@ function createParticlePositions(count: number): Float32Array {
 
 function ParticleField() {
   const pointsRef = useRef<ThreePoints>(null);
-  const positions = useMemo(() => createParticlePositions(1400), []);
+  const positions = useMemo(() => createParticlePositions(2400), []);
 
   useFrame((_, delta) => {
     if (!pointsRef.current) {
@@ -197,12 +199,12 @@ export function HeroScene() {
         <MouseTracker />
         <ParticleField />
         <Sparkles
-          count={90}
+          count={140}
           size={1.1}
           speed={0.22}
           opacity={0.55}
           color="#5eead4"
-          scale={[14, 14, 14]}
+          scale={[34, 18, 16]}
         />
       </Suspense>
     </Canvas>

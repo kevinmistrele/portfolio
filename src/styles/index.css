@@ -199,7 +199,11 @@ h1, h2, h3 {
 
 .hero__scene {
   position: absolute;
-  inset: 0;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: 100vw;
+  transform: translateX(-50%);
   z-index: 0;
 }
 
