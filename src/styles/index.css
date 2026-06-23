@@ -1,3 +1,10 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+@import "@fontsource-variable/geist";
+
+@custom-variant dark (&:is(.dark *));
+
 :root {
   --color-bg: #060912;
   --color-bg-soft: #0b101c;
@@ -8,9 +15,40 @@
   --color-primary: #5eead4;
   --color-secondary: #6366f1;
   --max-width: 1080px;
-  --radius: 16px;
+  --radius: 0.625rem;
   --transition: 0.25s ease;
   font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --background: oklch(0.09 0.02 255);
+  --foreground: oklch(0.93 0.01 250);
+  --card: oklch(0.14 0.03 255);
+  --card-foreground: oklch(0.93 0.01 250);
+  --popover: oklch(0.11 0.02 255);
+  --popover-foreground: oklch(0.93 0.01 250);
+  --primary: oklch(0.87 0.13 180);
+  --primary-foreground: oklch(0.18 0.05 175);
+  --secondary: oklch(0.58 0.22 270);
+  --secondary-foreground: oklch(0.93 0.01 250);
+  --muted: oklch(0.11 0.02 255);
+  --muted-foreground: oklch(0.66 0.03 245);
+  --accent: oklch(0.17 0.03 255);
+  --accent-foreground: oklch(0.93 0.01 250);
+  --destructive: oklch(0.577 0.245 27.325);
+  --border: oklch(0.22 0.04 255);
+  --input: oklch(0.22 0.04 255);
+  --ring: oklch(0.87 0.13 180);
+  --chart-1: oklch(0.87 0.13 180);
+  --chart-2: oklch(0.58 0.22 270);
+  --chart-3: oklch(0.66 0.03 245);
+  --chart-4: oklch(0.22 0.04 255);
+  --chart-5: oklch(0.14 0.03 255);
+  --sidebar: oklch(0.11 0.02 255);
+  --sidebar-foreground: oklch(0.93 0.01 250);
+  --sidebar-primary: oklch(0.87 0.13 180);
+  --sidebar-primary-foreground: oklch(0.18 0.05 175);
+  --sidebar-accent: oklch(0.17 0.03 255);
+  --sidebar-accent-foreground: oklch(0.93 0.01 250);
+  --sidebar-border: oklch(0.22 0.04 255);
+  --sidebar-ring: oklch(0.87 0.13 180);
 }
 
 * {
@@ -231,8 +269,15 @@ h1, h2, h3 {
 
 .about__grid {
   display: grid;
-  grid-template-columns: 1.6fr 1fr;
-  gap: 3rem;
+  grid-template-columns: auto 1fr;
+  gap: 3.5rem;
+  align-items: start;
+}
+
+.about__main {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
 }
 
 .about__text p {
@@ -261,6 +306,72 @@ h1, h2, h3 {
   font-size: 0.82rem;
   color: var(--color-text);
   background: var(--color-bg-soft);
+  cursor: default;
+  transition: border-color var(--transition), color var(--transition), background var(--transition);
+}
+
+.about__skill:hover {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+  background: rgba(94, 234, 212, 0.08);
+}
+
+/* ── Profile photo ── */
+.about__photo-wrapper {
+  width: 220px;
+  flex-shrink: 0;
+}
+
+.about__photo-tilt {
+  position: relative;
+  width: 220px;
+  height: 220px;
+}
+
+.about__photo-glow {
+  position: absolute;
+  inset: -18px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 40% 40%, rgba(94, 234, 212, 0.18), rgba(99, 102, 241, 0.12), transparent 70%);
+  z-index: 0;
+  pointer-events: none;
+}
+
+.about__photo-ring {
+  position: relative;
+  z-index: 1;
+  width: 220px;
+  height: 220px;
+  border-radius: 50%;
+  padding: 3px;
+  background: conic-gradient(from 0deg, #5eead4, #6366f1, #a855f7, #5eead4);
+  animation: spin-ring 6s linear infinite;
+}
+
+.about__photo-inner {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  overflow: hidden;
+  background: var(--color-bg);
+}
+
+.about__photo-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
+  display: block;
+  transition: transform 0.4s ease;
+}
+
+.about__photo-ring:hover .about__photo-img {
+  transform: scale(1.05);
+}
+
+@keyframes spin-ring {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
 }
 
 .timeline {
@@ -290,6 +401,12 @@ h1, h2, h3 {
   border-radius: 50%;
   background: var(--color-primary);
   box-shadow: 0 0 0 4px rgba(94, 234, 212, 0.15);
+  animation: pulse-marker 2.4s ease-in-out infinite;
+}
+
+@keyframes pulse-marker {
+  0%, 100% { box-shadow: 0 0 0 4px rgba(94, 234, 212, 0.15); }
+  50% { box-shadow: 0 0 0 9px rgba(94, 234, 212, 0.28), 0 0 14px rgba(94, 234, 212, 0.2); }
 }
 
 .timeline__header {
@@ -463,7 +580,23 @@ h1, h2, h3 {
   padding: 2.5rem;
   border: 1px solid var(--color-border);
   border-radius: var(--radius);
-  background: var(--color-bg-soft);
+  background: linear-gradient(145deg, var(--color-bg-soft), var(--color-surface));
+  position: relative;
+  overflow: hidden;
+  transition: border-color var(--transition), box-shadow var(--transition);
+}
+
+.contact__card:hover {
+  border-color: rgba(94, 234, 212, 0.3);
+  box-shadow: 0 24px 60px -20px rgba(94, 234, 212, 0.18);
+}
+
+.contact__card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 50% 0%, rgba(94, 234, 212, 0.06) 0%, transparent 65%);
+  pointer-events: none;
 }
 
 .contact__subtitle {
@@ -527,9 +660,106 @@ h1, h2, h3 {
   .about__grid {
     grid-template-columns: 1fr;
     gap: 2rem;
+    justify-items: center;
+  }
+
+  .about__photo-wrapper,
+  .about__photo-tilt,
+  .about__photo-ring {
+    width: 180px;
+    height: 180px;
   }
 
   .contact__links {
     grid-template-columns: 1fr;
+  }
+}
+
+@theme inline {
+  --font-heading: var(--font-sans);
+  --font-sans: 'Geist Variable', sans-serif;
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --color-foreground: var(--foreground);
+  --color-background: var(--background);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
+}
+
+.dark {
+  --background: oklch(0.145 0 0);
+  --foreground: oklch(0.985 0 0);
+  --card: oklch(0.205 0 0);
+  --card-foreground: oklch(0.985 0 0);
+  --popover: oklch(0.205 0 0);
+  --popover-foreground: oklch(0.985 0 0);
+  --primary: oklch(0.922 0 0);
+  --primary-foreground: oklch(0.205 0 0);
+  --secondary: oklch(0.269 0 0);
+  --secondary-foreground: oklch(0.985 0 0);
+  --muted: oklch(0.269 0 0);
+  --muted-foreground: oklch(0.708 0 0);
+  --accent: oklch(0.269 0 0);
+  --accent-foreground: oklch(0.985 0 0);
+  --destructive: oklch(0.704 0.191 22.216);
+  --border: oklch(1 0 0 / 10%);
+  --input: oklch(1 0 0 / 15%);
+  --ring: oklch(0.556 0 0);
+  --chart-1: oklch(0.87 0 0);
+  --chart-2: oklch(0.556 0 0);
+  --chart-3: oklch(0.439 0 0);
+  --chart-4: oklch(0.371 0 0);
+  --chart-5: oklch(0.269 0 0);
+  --sidebar: oklch(0.205 0 0);
+  --sidebar-foreground: oklch(0.985 0 0);
+  --sidebar-primary: oklch(0.488 0.243 264.376);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.269 0 0);
+  --sidebar-accent-foreground: oklch(0.985 0 0);
+  --sidebar-border: oklch(1 0 0 / 10%);
+  --sidebar-ring: oklch(0.556 0 0);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+  html {
+    @apply font-sans;
   }
 }

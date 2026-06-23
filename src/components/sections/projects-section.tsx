@@ -32,8 +32,8 @@ export function ProjectsSection() {
 
       {hasProjects ? (
         <div className="projects__grid">
-          {visibleProjects.map(function renderProject(project) {
-            return <ProjectCard key={project.id} project={project} />;
+          {visibleProjects.map(function renderProject(project, index) {
+            return <ProjectCard key={project.id} project={project} index={index} />;
           })}
         </div>
       ) : null}

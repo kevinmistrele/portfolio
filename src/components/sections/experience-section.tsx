@@ -11,15 +11,16 @@ export function ExperienceSection() {
       <SectionTitle index="02" title={experience.title} />
 
       <ol className="timeline">
-        {experience.items.map(function renderItem(item) {
+        {experience.items.map(function renderItem(item, index) {
           return (
             <motion.li
               key={item.company}
               className="timeline__item"
-              initial={{ opacity: 0, x: -24 }}
+              initial={{ opacity: 0, x: -28 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true, margin: "-60px" }}
-              transition={{ duration: 0.5 }}
+              transition={{ duration: 0.5, delay: index * 0.1 }}
+              whileHover={{ x: 4 }}
             >
               <div className="timeline__marker" aria-hidden="true" />
               <div className="timeline__content">
