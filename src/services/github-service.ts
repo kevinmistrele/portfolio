@@ -1,6 +1,10 @@
 import type { Project } from "@/types/project";
-import { featuredProjectNames } from "@/data/featured-projects";
+import { featuredProjectNames, fallbackProjects } from "@/data/featured-projects";
 import { githubUsername } from "@/data/profile";
+
+const curatedProjectsByName = new Map(
+  fallbackProjects.map((project) => [project.name, project]),
+);
 
 interface GithubRepository {
   id: number;
@@ -19,15 +23,20 @@ interface GithubRepository {
 const REPOSITORIES_ENDPOINT = `https://api.github.com/users/${githubUsername}/repos?sort=updated&per_page=100`;
 
 function mapRepositoryToProject(repository: GithubRepository): Project {
+  const curated = curatedProjectsByName.get(repository.name);
+  const liveTopics = repository.topics ?? [];
+
   return {
     id: repository.id,
     name: repository.name,
-    description: repository.description ?? "",
-    language: repository.language,
-    topics: repository.topics ?? [],
+    // Prefer curated copy so featured cards always show a polished
+    // description, falling back to whatever GitHub provides.
+    description: curated?.description || repository.description || "",
+    language: repository.language ?? curated?.language ?? null,
+    topics: liveTopics.length > 0 ? liveTopics : curated?.topics ?? [],
     stars: repository.stargazers_count,
     repositoryUrl: repository.html_url,
-    homepageUrl: repository.homepage ? repository.homepage : null,
+    homepageUrl: repository.homepage || curated?.homepageUrl || null,
     updatedAt: repository.updated_at,
     featured: featuredProjectNames.includes(repository.name),
   };
